@@ -14,6 +14,7 @@ Specific services and bindings have to provide meta information which is used fo
 - Binding definitions: Required to declare a binding (mandatory)
 - Bridge and *Thing* descriptions: Required to specify which bridges and *Thing*s are provided by the binding, which relations they have to each other and which channels they offer (mandatory) 
 
+[Supported context](#supported-context)
 
 ## Configuration Descriptions
 
@@ -397,6 +398,8 @@ Bridge and *Thing* descriptions must be placed as XML file(s) (with the ending `
 </table>
 
 The full XML schema for Thing type descriptions is specified in the <a href="https://www.eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">ESH thing description XSD</a> file.
+
+## Supported Context
 
 **Hints:**
 
