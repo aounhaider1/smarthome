@@ -14,7 +14,6 @@ Specific services and bindings have to provide meta information which is used fo
 - Binding definitions: Required to declare a binding (mandatory)
 - Bridge and *Thing* descriptions: Required to specify which bridges and *Thing*s are provided by the binding, which relations they have to each other and which channels they offer (mandatory) 
 
-[Supported context](#supported-context-in-paperui)
 
 ## Configuration Descriptions
 
@@ -88,7 +87,7 @@ The following HTML tags are allowed -: ```<b>, <br>, <em>, <h1>, <h2>, <h3>, <h4
   <tr><td>parameter.groupName</td><td>Sets a group name for this parameter (optional).</td></tr>
   <tr><td>parameter.unit</td><td>Specifies the unit of measurements. The unit declaration in the parameter definition shown above contains the set of valid units. The unit must only be set if the type of the parameter is either integer or decimal (optional).</td></tr>
   <tr><td>advanced</td><td>Specifies that this is an advanced parameter. Advanced parameters may be hidden by a UI (optional).</td></tr>
-  <tr><td>context</td><td>The context of the configuration parameter (optional).</td></tr>
+  <tr><td>context</td><td>The context of the configuration parameter (optional). <a href='#supported-contexts'>Supported contexts</a></td></tr>
   <tr><td>required</td><td>The flag indicating if the configuration parameter has to be set or not (deprecated, optional, default: false).</td></tr>
   <tr><td>default</td><td>The default value of the configuration parameter (optional).</td></tr>
   <tr><td>label</td><td>A human-readable label for the configuration parameter (optional).</td></tr>
@@ -100,6 +99,19 @@ The following HTML tags are allowed -: ```<b>, <br>, <em>, <h1>, <h2>, <h3>, <h4
   <tr><td>limitToOptions</td><td>If true (default) will only allow the user to select items in the options list. If false, will allow the user to enter other text (optional).</td></tr>
   <tr><td>criteria</td><td>The filter criteria for values of a dynamic selection list (optional).</td></tr>  
   <tr><td>criteria.name</td><td>The name of the context related filter.</td></tr>  
+</table>
+
+### Supported contexts
+
+Context is used to provide some semantic details about the parameter. The UI use it to render different kind of input widgets. Currently, PaperUI supports following contexts:
+
+<table><tr><th>Name</th><th>Type</th><th>Format</th></tr>
+  <tr><td>Date</td><td>Text</td><td>DD:MM:YYYY</td></tr>
+  <tr><td>Time</td><td>Text/Integer</td><td>hh:mm</td></tr>
+  <tr><td>Color</td><td>Text</td><td>#000000 - #ffffff (hex color)</td></tr>
+  <tr><td>Item</td><td>Text</td><td>Item name</td></tr>
+  <tr><td>Thing</td><td>Text</td><td>UID of thing</td></tr>
+  <tr><td>Day of week</td><td>Text</td><td>MON, TUE, WED, THU, FRI, SAT, SUN <br></td></tr>
 </table>
 
 Groups allow parameters to be grouped together into logical blocks so that the user can find the parameters they are looking for. A parameter can be placed into a group so that the UI knows how to display the information.
@@ -151,7 +163,7 @@ The following code gives an example for one configuration description.
 
 ## Binding Definitions
 
-Every binding has to provide meta information such as author or description. The meta information of all bindings is accessible through the `org.eclipse.smarthome.core.binding.BindingInfoRegistry` service.
+Every binding has to provide meta information such as binding id or name. The meta information of all bindings is accessible through the `org.eclipse.smarthome.core.binding.BindingInfoRegistry` service.
 
 Although binding definitions are usually specified in a declarative way (as described in this section), they can also be provided as `org.eclipse.smarthome.core.binding.BindingInfo`.
 Any `BindingInfo` must be registered as service at the *OSGi* service registry. The full Java API for binding definitions can be found in the Java package `org.eclipse.smarthome.core.binding`.
@@ -187,7 +199,7 @@ Binding definitions must be placed as XML file(s) (with the ending `.xml`) in th
   <tr><td>binding.id</td><td>An identifier for the binding (mandatory).</td></tr>
   <tr><td>name</td><td>A human-readable name for the binding (mandatory).</td></tr>
   <tr><td>description</td><td>A human-readable description for the binding (optional).</td></tr>
-  <tr><td>author</td><td>The author of the binding (mandatory).</td></tr>
+  <tr><td>author</td><td>The author of the binding (optional).</td></tr>
   <tr><td>service-id</td><td>The ID (service.pid or component.name) of the main binding service, which can be configured through OSGi configuration admin service. Should only be used in combination with a config description definition (optional).</td></tr>
   <tr><td>config-description</td><td>The configuration description for the binding within the ConfigDescriptionRegistry (optional).</td></tr>
   <tr><td>config-description-ref</td><td>The reference to a configuration description for the binding within the ConfigDescriptionRegistry (optional).</td></tr>
@@ -398,8 +410,6 @@ Bridge and *Thing* descriptions must be placed as XML file(s) (with the ending `
 </table>
 
 The full XML schema for Thing type descriptions is specified in the <a href="https://www.eclipse.org/smarthome/schemas/thing-description-1.0.0.xsd">ESH thing description XSD</a> file.
-
-## Supported Context in PaperUI
 
 **Hints:**
 
