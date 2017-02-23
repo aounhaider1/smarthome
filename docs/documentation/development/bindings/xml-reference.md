@@ -108,10 +108,7 @@ Context is used to provide some semantic details about the parameter. The UIs us
 <table><tr><th>Name</th><th>Type</th><th>Format</th><th>Sample implementation</th></tr>
   <tr><td>network-addess</td><td>text</td><td>IPv4,IPv6, domain name</td>
   <td>
-
-  ```
-  <input type="text"/>
-  ```
+<code>&lt;input type="text"/></code>
   </td></tr>
   <tr><td>password</td><td>text</td><td>alphanumeric characters</td><td>
 
