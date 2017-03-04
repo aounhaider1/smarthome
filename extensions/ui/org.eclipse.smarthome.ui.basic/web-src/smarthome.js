@@ -406,13 +406,13 @@
 		_t.updateInterval = parseInt(parentNode.getAttribute("data-update-interval"), 10);
 
 		_t.url = parentNode.getAttribute("data-proxied-url");
-		_t.validUrl = parentNode.getAttribute("data-valid-url");
+		_t.validUrl = parentNode.getAttribute("data-valid-url") === "true";
 
 		_t.setValuePrivate = function(value, itemState) {
 			if (itemState.startsWith("data:")) {
 				// Image element associated to an item of type ImageItem
 				_t.image.setAttribute("src", itemState);
-			} else if ((itemState !== "UNDEF") || (_t.validUrl === "true")) {
+			} else if ((itemState !== "UNDEF") || (_t.validUrl)) {
 				// Image element associated to an item of type StringItem (URL)
 				// Or no associated item but url is set and valid in the image element
 				_t.image.setAttribute("src", _t.url + "&t=" + Date.now());
