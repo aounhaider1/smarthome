@@ -23,31 +23,51 @@ import org.eclipse.smarthome.core.types.State;
 public class RawType implements PrimitiveType, State {
 
     protected byte[] bytes;
+    protected String mimeType;
 
     public RawType() {
         this(new byte[0]);
     }
 
     public RawType(byte[] bytes) {
+        this(bytes, null);
+    }
+
+    public RawType(byte[] bytes, String mimeType) {
         this.bytes = bytes;
+        this.mimeType = mimeType;
     }
 
     public byte[] getBytes() {
         return bytes;
     }
 
+    public String getMimeType() {
+        return mimeType;
+    }
+
     public static RawType valueOf(String value) {
-        return new RawType(Base64.getDecoder().decode(value));
+        int idx;
+        if (value == null || !value.startsWith("data:") || ((idx = value.indexOf(",")) < 0)) {
+            return new RawType();
+        }
+        String mimeType = null;
+        int idx2 = value.indexOf(";");
+        if (idx2 > 5) {
+            mimeType = value.substring(5, idx2);
+        }
+        return new RawType(Base64.getDecoder().decode(value.substring(idx + 1)), mimeType);
     }
 
     @Override
     public String toString() {
-        return String.format("raw type: %d bytes", bytes.length);
+        return String.format("raw type (%s): %d bytes", (mimeType != null) ? mimeType : "unknown", bytes.length);
     }
 
     @Override
     public String toFullString() {
-        return Base64.getEncoder().encodeToString(bytes);
+        return String.format("data:%s;base64,%s", (mimeType != null) ? mimeType : "",
+                Base64.getEncoder().encodeToString(bytes));
     }
 
     @Override
@@ -75,6 +95,11 @@ public class RawType implements PrimitiveType, State {
             return false;
         }
         RawType other = (RawType) obj;
+        if (mimeType == null && other.mimeType != null) {
+            return false;
+        } else if (mimeType != null && !mimeType.equals(other.mimeType)) {
+            return false;
+        }
         if (!Arrays.equals(bytes, other.bytes)) {
             return false;
         }

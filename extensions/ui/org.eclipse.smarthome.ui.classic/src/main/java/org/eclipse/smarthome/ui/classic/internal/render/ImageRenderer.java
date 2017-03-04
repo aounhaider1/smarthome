@@ -7,10 +7,14 @@
  */
 package org.eclipse.smarthome.ui.classic.internal.render;
 
+import java.net.URI;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.smarthome.core.library.types.RawType;
+import org.eclipse.smarthome.core.library.types.StringType;
+import org.eclipse.smarthome.core.types.State;
 import org.eclipse.smarthome.model.sitemap.Image;
 import org.eclipse.smarthome.model.sitemap.Widget;
 import org.eclipse.smarthome.ui.classic.render.RenderException;
@@ -43,7 +47,7 @@ public class ImageRenderer extends AbstractWidgetRenderer {
 
         if (image.getRefresh() > 0) {
             snippet = StringUtils.replace(snippet, "%refresh%", "id=\"%id%\" data-timeout=\"" + image.getRefresh()
-                            + "\" onload=\"startReloadImage('%url%', '%id%')\"");
+                    + "\" onload=\"startReloadImage('%url%', '%id%')\"");
         } else {
             snippet = StringUtils.replace(snippet, "%refresh%", "");
         }
@@ -53,7 +57,24 @@ public class ImageRenderer extends AbstractWidgetRenderer {
 
         String sitemap = w.eResource().getURI().path();
 
-        String url = "../proxy?sitemap=" + sitemap + "&widgetId=" + widgetId + "&t=" + (new Date()).getTime();
+        boolean validUrl = false;
+        if (image.getUrl() != null && !image.getUrl().isEmpty()) {
+            try {
+                URI.create(image.getUrl());
+                validUrl = true;
+            } catch (IllegalArgumentException ex) {
+            }
+        }
+        String proxiedUrl = "../proxy?sitemap=" + sitemap + "&widgetId=" + widgetId;
+        State state = itemUIRegistry.getState(w);
+        String url;
+        if (state instanceof RawType) {
+            url = state.toFullString();
+        } else if (state instanceof StringType || validUrl) {
+            url = proxiedUrl + "&t=" + (new Date()).getTime();
+        } else {
+            url = "images/none.png";
+        }
         snippet = StringUtils.replace(snippet, "%url%", url);
 
         sb.append(snippet);
