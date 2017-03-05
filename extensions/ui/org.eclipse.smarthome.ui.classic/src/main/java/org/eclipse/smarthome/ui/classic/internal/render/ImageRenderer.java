@@ -55,8 +55,10 @@ public class ImageRenderer extends AbstractWidgetRenderer {
         String widgetId = itemUIRegistry.getWidgetId(w);
         snippet = StringUtils.replace(snippet, "%id%", widgetId);
 
-        String sitemap = w.eResource().getURI().path();
-
+        String sitemap = null;
+        if (w.eResource() != null) {
+            sitemap = w.eResource().getURI().path();
+        }
         boolean validUrl = false;
         if (image.getUrl() != null && !image.getUrl().isEmpty()) {
             try {
@@ -70,7 +72,7 @@ public class ImageRenderer extends AbstractWidgetRenderer {
         String url;
         if (state instanceof RawType) {
             url = state.toFullString();
-        } else if (state instanceof StringType || validUrl) {
+        } else if ((sitemap != null) && ((state instanceof StringType) || validUrl)) {
             url = proxiedUrl + "&t=" + (new Date()).getTime();
         } else {
             url = "images/none.png";
